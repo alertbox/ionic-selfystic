@@ -1,5 +1,6 @@
 # Selfystic
 
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/alertbox/selfystic)
 [![Join the chat at https://gitter.im/alertbox/ionic-selfystic](https://badges.gitter.im/alertbox/ionic-selfystic.svg)](https://gitter.im/alertbox/ionic-selfystic?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Stories in Ready](https://badge.waffle.io/alertbox/ionic-selfystic.svg?label=ready&title=ready)](http://waffle.io/alertbox/ionic-selfystic)
 [![license](https://img.shields.io/npm/l/serverless-dynamodb-local.svg)](https://opensource.org/licenses/MIT)
