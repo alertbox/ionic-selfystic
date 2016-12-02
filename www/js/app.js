@@ -1,94 +1,124 @@
-(function (window, cordova, angular, undefined) {
+// Ionic Selfystic Starter App
 
-  angular.module('selfystic', ['ionic', 'ngCordova', 'ionic.contrib.ui.cards'])
+// angular.module is a global place for creating, registering and retrieving Angular modules
+// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
+// the 2nd parameter is an array of 'requires'
+angular.module('Selfystic', ['ionic', 'ionic.native', 'ionic.contrib.ui.cards'])
 
-    .run(function ($ionicPlatform) {
-      $ionicPlatform.ready(function () {
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        }
-        if (window.StatusBar) {
-          StatusBar.styleDefault();
-        }
+.run(function ($ionicPlatform) {
+
+  $ionicPlatform.ready(onDeviceReady);
+
+  function onDeviceReady($cordovaKeyboard, $cordovaStatusBar, $cordovaCodePush) {
+
+    if (ionic.Platform.isIOS()) {
+      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+      // for form inputs)
+      $cordovaKeyboard.hideKeyboardAccessoryBar(true);
+
+      // Don't remove this line unless you know what you are doing. It stops the viewport
+      // from snapping when text inputs are focused. Ionic handles this internally for
+      // a much nicer keyboard experience.
+      $cordovaKeyboard.disableScroll(true);
+    }
+
+    $cordovaStatusBar.styleDefault();
+    
+    $cordovaCodePush.sync();
+  }
+})
+
+.directive('noScroll', function ($document) {
+
+  return {
+    restrict: 'A',
+    link: function ($scope, $element, $attr) {
+
+      $document.on('touchmove', function (e) {
+        e.preventDefault();
       });
-    })
+    }
+  };
+})
 
-    .directive('noScroll', function ($document) {
-      return {
-        restrict: 'A',
-        link: function ($scope, $element, $attr) {
+.controller('Cards', function ($scope, $cordovaCamera, $ionicSwipeCardDelegate) {
 
-          $document.on('touchmove', function (e) {
-            e.preventDefault();
-          });
-        }
-      }
-    })
+  var cardTypes = [{
+    title: 'Swipe down to clear the card',
+    image: 'img/pic.png'
+  }, {
+    title: 'Where is this?',
+    image: 'img/pic.png'
+  }, {
+    title: 'What kind of grass is this?',
+    image: 'img/pic2.png'
+  }, {
+    title: 'What beach is this?',
+    image: 'img/pic3.png'
+  }, {
+    title: 'What kind of clouds are these?',
+    image: 'img/pic4.png'
+  }];
 
-    .controller('Cards', function ($scope, $cordovaCamera, $ionicSwipeCardDelegate) {
-      var cardTypes = [{
-        title: 'Swipe down to clear the card',
-        image: 'img/pic.png'
-      }, {
-          title: 'Where is this?',
-          image: 'img/pic.png'
-        }, {
-          title: 'What kind of grass is this?',
-          image: 'img/pic2.png'
-        }, {
-          title: 'What beach is this?',
-          image: 'img/pic3.png'
-        }, {
-          title: 'What kind of clouds are these?',
-          image: 'img/pic4.png'
-        }];
+  $scope.cards = Array.prototype.slice.call(cardTypes, 0, 0);
 
-      $scope.cards = Array.prototype.slice.call(cardTypes, 0, 0);
+  $scope.cardSwiped = onCardSwiped;
+  $scope.cardDestroyed = onCardDestroyed;
+  $scope.addCard = onAddCard;
+  $scope.selfy = onSelfy;
 
-      $scope.cardSwiped = function (index) {
-        $scope.addCard();
-      };
+  function onCardSwiped(index) {
+    $scope.addCard();
+  }
 
-      $scope.cardDestroyed = function (index) {
-        $scope.cards.splice(index, 1);
-      };
+  function onCardDestroyed(index) {
+    $scope.cards.splice(index, 1);
+  }
 
-      $scope.addCard = function () {
-        var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
-        newCard.id = Math.random();
-        $scope.cards.push(angular.extend({}, newCard));
-      };
+  function onAddCard() {
+    var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+    newCard.id = Math.random();
+    $scope.cards.push(angular.extend({}, newCard));
+  }
 
-      $scope.capture = function () {
-        var options = {
-          destinationType: Camera.DestinationType.FILE_URI,
-          sourceType: Camera.PictureSourceType.CAMERA,
-          cameraDirection: Camera.Direction.FRONT,
-          correctOrientation: true
-        };
+  function onSelfy() {
 
-        $cordovaCamera.getPicture(options).then(function (imageURI) {
-          $scope.cardDestroyed(0);
+    var options = {
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      cameraDirection: Camera.Direction.FRONT,
+      correctOrientation: true
+    };
 
-          var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
-          newCard.image = imageURI;
-          newCard.id = Math.random();
-          $scope.cards.push(angular.extend({}, newCard));
-          $scope.$digest();
+    $cordovaCamera.getPicture(options).then(function (imageURI) {
+      $scope.cardDestroyed(0);
 
-        }, function (err) {
-          // error.
-        }).always(function () {
-          $cordovaCamera.cleanup();
-        });
-      };
-    })
+      var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+      newCard.image = imageURI;
+      newCard.id = Math.random();
+      $scope.cards.push(angular.extend({}, newCard));
+      $scope.$digest();
 
-    .controller('Card', function ($scope, $ionicSwipeCardDelegate) {
-      $scope.goAway = function () {
-        var card = $ionicSwipeCardDelegate.getSwipeableCard($scope);
-        card.swipe();
-      };
+    }, function (err) {
+      // error.
+    }).always(function () {
+      $cordovaCamera.cleanup();
     });
+  }
+})
 
-})(window, window.cordova, window.angular)
+.controller('Card', function ($scope, $ionicSwipeCardDelegate) {
+
+  $scope.like = onLike;
+  $scope.share = onShare;
+
+  function onLike() {
+    var card = $ionicSwipeCardDelegate.getSwipeableCard($scope);
+    card.swipe();
+  }
+
+  function onShare() {
+    var card = $ionicSwipeCardDelegate.getSwipeableCard($scope);
+    card.swipe();
+  }
+});

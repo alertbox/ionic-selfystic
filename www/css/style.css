@@ -1,4 +1,4 @@
-.icon-larger {
+﻿.icon-larger {
     font-size: 55px !important;
 }
 
@@ -104,4 +104,3 @@ swipe-card.pop-in-start {
 swipe-card.pop-in {
   -webkit-animation: bounceIn 0.4s ease-out;
 }
-
