@@ -3,14 +3,16 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('Selfystic', ['ionic', 'ionic.native', 'ionic.contrib.ui.cards'])
+angular.module('Selfystic', ['ionic', 'ngCordova', 'ionic.contrib.ui.cards'])
 
 .run(function ($ionicPlatform) {
 
   $ionicPlatform.ready(onDeviceReady);
 
-  function onDeviceReady($cordovaKeyboard, $cordovaStatusBar, $cordovaCodePush) {
-
+  function onDeviceReady($cordovaKeyboard, $cordovaStatusBar) {
+    
+    codePush.sync();
+    
     if (ionic.Platform.isIOS()) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -23,8 +25,6 @@ angular.module('Selfystic', ['ionic', 'ionic.native', 'ionic.contrib.ui.cards'])
     }
 
     $cordovaStatusBar.styleDefault();
-    
-    $cordovaCodePush.sync();
   }
 })
 
@@ -91,6 +91,7 @@ angular.module('Selfystic', ['ionic', 'ionic.native', 'ionic.contrib.ui.cards'])
     };
 
     $cordovaCamera.getPicture(options).then(function (imageURI) {
+
       $scope.cardDestroyed(0);
 
       var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];

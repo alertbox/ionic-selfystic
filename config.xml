@@ -6,6 +6,13 @@
     <author email="alertbox.inc@gmail.com" href="https://github.com/alertbox/ionic-selfystic">Alertbox Inc.</author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
@@ -90,4 +97,15 @@
     </vs:platformSpecificValues>
     <preference name="target-device" value="handset" />
     <engine name="android" spec="latest" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <!-- code-push app: io.selfystic.android -->
+        <preference name="CodePushDeploymentKey" value="io.selfystic.android" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <!-- code-push app: io.selfystic.ios -->
+        <preference name="CodePushDeploymentKey" value="io.selfystic.ios" />
+    </platform>
 </widget>
